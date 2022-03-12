@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.22/esri/themes/light/main.css"
+    />
+    <script src="https://js.arcgis.com/4.22/"></script>
+    <title>map1</title>
+  </head>
+  <body>
+    <script>
+      require([
+        "esri/config",
+        "esri/Map",
+        "esri/views/MapView",
+        "esri/Graphic",
+        "esri/layers/GraphicsLayer",
+        "esri/layers/FeatureLayer",
+      ], function (
+        esriConfig,
+        Map,
+        MapView,
+        Graphic,
+        GraphicsLayer,
+        FeatureLayer
+      ) {
+        esriConfig.apiKey =
+          "AAPKa9005604e740493caa26b29764650efaz8G2o-mPktvatPESxNkcRB4anSKHCmCiu9LYte0VdwN5KszEnE85vIExZUI5Eaxu";
+
+        const map = new Map({
+          basemap: "arcgis-topographic", // Basemap layer service
+        });
+
+        const view = new MapView({
+          map: map,
+          center: [-118.80543, 34.027], // Longitude, latitude
+          zoom: 13, // Zoom level
+          container: "viewDiv", // Div element
+        });
+
+        //Trailheads feature layer (points)
+        const trailheadsLayer = new FeatureLayer({
+          url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trailheads/FeatureServer/0",
+        });
+
+        map.add(trailheadsLayer, 0);
+
+        //Trails feature layer (lines)
+        const trailsLayer = new FeatureLayer({
+          url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trails/FeatureServer/0",
+        });
+
+        const graphicsLayer = new GraphicsLayer();
+        map.add(graphicsLayer);
+
+        const point = {
+          //Create a point
+          type: "point",
+          longitude: 31.2357,
+          latitude: 30.0444,
+        };
+        const simpleMarkerSymbol = {
+          type: "simple-marker",
+          color: [226, 119, 40], // Orange
+          outline: {
+            color: [255, 255, 255], // White
+            width: 1,
+          },
+        };
+        const pointGraphic = new Graphic({
+          geometry: point,
+          symbol: simpleMarkerSymbol,
+        });
+        graphicsLayer.add(pointGraphic);
+      });
+    </script>
+
+    <div id="viewDiv"></div>
+  </body>
+</html>
